@@ -1,0 +1,1178 @@
+<!doctype html>
+<html lang="ar" dir="rtl" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infinity - منصة تعليمية</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    * {
+      font-family: 'Tajawal', sans-serif;
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    }
+    .card-gradient {
+      background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(10px);
+    }
+    .glow {
+      box-shadow: 0 0 40px rgba(124, 58, 237, 0.3);
+    }
+    .infinity-logo {
+      background: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(124, 58, 237, 0.4);
+    }
+    .course-card {
+      transition: all 0.3s ease;
+    }
+    .course-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .float-animation {
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); }
+      50% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.6); }
+    }
+    .pulse-glow {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+    }
+    .video-container video,
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .toast {
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .animate-spin {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full gradient-bg text-white overflow-auto">
+  <div id="app" class="min-h-full">
+   <!-- Toast Container -->
+   <div id="toast-container" class="fixed top-4 left-4 z-50 flex flex-col gap-2"></div>
+   
+   <!-- Header -->
+   <header class="sticky top-0 z-40 bg-black/30 backdrop-blur-lg border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+     <div class="flex items-center gap-3 cursor-pointer" onclick="showPage('home')">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center float-animation">
+       <span class="text-2xl font-bold">∞</span>
+      </div>
+      <h1 id="site-title" class="text-2xl font-bold infinity-logo">Infinity</h1>
+     </div>
+     <nav class="flex items-center gap-4">
+      <button onclick="showPage('home')" class="px-4 py-2 rounded-lg hover:bg-white/10 transition">الرئيسية</button>
+      <button onclick="showPage('courses')" class="px-4 py-2 rounded-lg hover:bg-white/10 transition">الكورسات</button>
+      <button onclick="showAdminLogin()" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition flex items-center gap-2">
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+       </svg>
+       <span>المشرف</span>
+      </button>
+     </nav>
+    </div>
+   </header>
+   
+   <!-- Main Content -->
+   <main id="main-content" class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Home Page -->
+    <div id="home-page">
+     <div class="text-center py-16">
+      <div class="inline-block mb-8">
+       <div class="w-32 h-32 mx-auto rounded-3xl bg-gradient-to-br from-purple-500 via-indigo-500 to-blue-500 flex items-center justify-center pulse-glow">
+        <span class="text-6xl font-bold">∞</span>
+       </div>
+      </div>
+      <h2 id="welcome-text" class="text-4xl md:text-5xl font-bold mb-6">مرحباً بك في منصة <span class="infinity-logo">Infinity</span> التعليمية</h2>
+      <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">منصتك الأولى لتعلم علوم الحاسوب - Data Structure &amp; Logic Design</p>
+      <button onclick="showPage('courses')" class="btn-primary px-8 py-4 rounded-xl text-lg font-bold">استكشف الكورسات</button>
+     </div>
+     
+     <!-- Features -->
+     <div class="grid md:grid-cols-3 gap-6 mt-12">
+      <div class="card-gradient rounded-2xl p-6 border border-white/10">
+       <div class="w-14 h-14 rounded-xl bg-purple-500/20 flex items-center justify-center mb-4">
+        <svg class="w-7 h-7 text-purple-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        </svg>
+       </div>
+       <h3 class="text-xl font-bold mb-2">Data Structure</h3>
+       <p class="text-gray-400">تعلم هياكل البيانات من الصفر حتى الاحتراف</p>
+      </div>
+      <div class="card-gradient rounded-2xl p-6 border border-white/10">
+       <div class="w-14 h-14 rounded-xl bg-indigo-500/20 flex items-center justify-center mb-4">
+        <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+        </svg>
+       </div>
+       <h3 class="text-xl font-bold mb-2">Logic Design</h3>
+       <p class="text-gray-400">أساسيات التصميم المنطقي والدوائر الرقمية</p>
+      </div>
+      <div class="card-gradient rounded-2xl p-6 border border-white/10">
+       <div class="w-14 h-14 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4">
+        <svg class="w-7 h-7 text-blue-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+       </div>
+       <h3 class="text-xl font-bold mb-2">فيديوهات عالية الجودة</h3>
+       <p class="text-gray-400">محتوى مرئي احترافي وشرح مبسط</p>
+      </div>
+     </div>
+    </div>
+    
+    <!-- Courses Page -->
+    <div id="courses-page" class="hidden">
+     <h2 class="text-3xl font-bold mb-8">الكورسات المتاحة</h2>
+     
+     <!-- Course Tabs -->
+     <div class="flex gap-4 mb-8">
+      <button onclick="filterCourses('all')" id="tab-all" class="px-6 py-3 rounded-xl bg-purple-500/20 border border-purple-500/50 font-bold transition hover:bg-purple-500/30">جميع الكورسات</button>
+      <button onclick="filterCourses('data-structure')" id="tab-data-structure" class="px-6 py-3 rounded-xl bg-white/5 border border-white/10 font-bold transition hover:bg-white/10">Data Structure</button>
+      <button onclick="filterCourses('logic')" id="tab-logic" class="px-6 py-3 rounded-xl bg-white/5 border border-white/10 font-bold transition hover:bg-white/10">Logic Design</button>
+     </div>
+     
+     <!-- Videos Grid -->
+     <div id="videos-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="text-center py-16 col-span-full">
+       <div class="w-20 h-20 mx-auto rounded-full bg-white/5 flex items-center justify-center mb-4">
+        <svg class="w-10 h-10 text-gray-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+       </div>
+       <p class="text-gray-400 text-lg">لا توجد فيديوهات حالياً</p>
+       <p class="text-gray-500">سيتم إضافة الفيديوهات قريباً</p>
+      </div>
+     </div>
+    </div>
+    
+    <!-- Video Player Page -->
+    <div id="video-page" class="hidden">
+     <button onclick="showPage('courses')" class="flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      العودة للكورسات
+     </button>
+     <div id="video-content" class="card-gradient rounded-2xl border border-white/10 overflow-hidden">
+      <!-- Video will be loaded here -->
+     </div>
+    </div>
+    
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+     <div class="card-gradient rounded-2xl border border-white/10 p-8 w-full max-w-md">
+      <div class="text-center mb-6">
+       <div class="w-16 h-16 mx-auto rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center mb-4">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+       </div>
+       <h3 class="text-2xl font-bold">تسجيل دخول المشرف</h3>
+      </div>
+      <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
+       <div class="mb-4">
+        <label class="block text-gray-300 mb-2">اسم المستخدم</label>
+        <input type="text" id="admin-username" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition" placeholder="أدخل اسم المستخدم" required>
+       </div>
+       <div class="mb-6">
+        <label class="block text-gray-300 mb-2">كلمة المرور</label>
+        <input type="password" id="admin-password" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition" placeholder="أدخل كلمة المرور" required>
+       </div>
+       <div id="admin-login-error" class="hidden mb-4 p-3 rounded-lg bg-red-500/20 border border-red-500/50 text-red-300 text-center"></div>
+       <button type="submit" id="admin-login-btn" class="w-full btn-primary py-3 rounded-xl font-bold">دخول</button>
+      </form>
+      <button onclick="closeAdminLogin()" class="mt-4 w-full py-3 rounded-xl border border-white/10 hover:bg-white/5 transition">إلغاء</button>
+     </div>
+    </div>
+    
+    <!-- Course Password Modal -->
+    <div id="course-password-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+     <div class="card-gradient rounded-2xl border border-white/10 p-8 w-full max-w-md">
+      <div class="text-center mb-6">
+       <div class="w-16 h-16 mx-auto rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center mb-4">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+        </svg>
+       </div>
+       <h3 class="text-2xl font-bold">أدخل كلمة مرور الكورس</h3>
+       <p id="course-name-display" class="text-gray-400 mt-2"></p>
+      </div>
+      <form id="course-password-form" onsubmit="handleCoursePassword(event)">
+       <div class="mb-6">
+        <input type="password" id="course-password-input" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition text-center text-lg" placeholder="كلمة المرور" required>
+       </div>
+       <div id="course-password-error" class="hidden mb-4 p-3 rounded-lg bg-red-500/20 border border-red-500/50 text-red-300 text-center"></div>
+       <button type="submit" class="w-full btn-primary py-3 rounded-xl font-bold">مشاهدة</button>
+      </form>
+      <button onclick="closeCoursePassword()" class="mt-4 w-full py-3 rounded-xl border border-white/10 hover:bg-white/5 transition">إلغاء</button>
+     </div>
+    </div>
+    
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="hidden">
+     <div class="flex items-center justify-between mb-8">
+      <h2 class="text-3xl font-bold">لوحة تحكم المشرف</h2>
+      <button onclick="logoutAdmin()" class="px-4 py-2 rounded-xl bg-red-500/20 border border-red-500/50 hover:bg-red-500/30 transition flex items-center gap-2">
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+       </svg>
+       تسجيل خروج
+      </button>
+     </div>
+     
+     <!-- Add Video Form -->
+     <div class="card-gradient rounded-2xl border border-white/10 p-6 mb-8">
+      <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+       <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+       </svg>
+       إضافة فيديو جديد
+      </h3>
+      <form id="add-video-form" onsubmit="handleAddVideo(event)">
+       <div class="grid md:grid-cols-2 gap-4 mb-4">
+        <div>
+         <label class="block text-gray-300 mb-2">عنوان الفيديو</label>
+         <input type="text" id="video-title" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition" placeholder="أدخل عنوان الفيديو" required>
+        </div>
+        <div>
+         <label class="block text-gray-300 mb-2">الكورس</label>
+         <select id="video-course" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition" required>
+          <option value="">اختر الكورس</option>
+          <option value="data-structure">Data Structure</option>
+          <option value="logic">Logic Design</option>
+         </select>
+        </div>
+       </div>
+       <div class="mb-4">
+        <label class="block text-gray-300 mb-2">وصف الفيديو</label>
+        <textarea id="video-description" rows="2" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition" placeholder="أدخل وصف مختصر للفيديو"></textarea>
+       </div>
+       <div class="mb-4">
+        <div class="flex gap-2 mb-4">
+         <button type="button" onclick="switchVideoSource('url')" id="btn-url-source" class="px-4 py-2 rounded-lg bg-purple-500/30 border border-purple-500/50 font-bold transition">رابط الويب</button>
+         <button type="button" onclick="switchVideoSource('file')" id="btn-file-source" class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 font-bold transition hover:bg-white/10">رفع من الملفات</button>
+        </div>
+        <div id="url-source" class="grid md:grid-cols-2 gap-4">
+         <div>
+          <label class="block text-gray-300 mb-2">رابط الفيديو (YouTube أو رابط مباشر)</label>
+          <input type="url" id="video-url" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition" placeholder="https://youtube.com/watch?v=...">
+         </div>
+         <div>
+          <label class="block text-gray-300 mb-2">كلمة مرور الكورس</label>
+          <input type="text" id="video-password-url" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition" placeholder="كلمة مرور للوصول للفيديو">
+         </div>
+        </div>
+        <div id="file-source" class="hidden">
+         <div class="mb-4">
+          <label class="block text-gray-300 mb-2">اختر ملف الفيديو</label>
+          <div class="relative">
+           <input type="file" id="video-file-input" accept="video/*" class="hidden" onchange="handleFileSelect(event)">
+           <button type="button" onclick="document.getElementById('video-file-input').click()" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 border-dashed hover:border-purple-500 transition text-gray-400 hover:text-purple-400 flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            <span>اضغط لاختيار ملف الفيديو</span>
+           </button>
+          </div>
+          <p id="file-info" class="text-sm text-gray-500 mt-2"></p>
+         </div>
+         <div>
+          <label class="block text-gray-300 mb-2">كلمة مرور الكورس</label>
+          <input type="text" id="video-password-file" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition" placeholder="كلمة مرور للوصول للفيديو">
+         </div>
+        </div>
+       </div>
+       <button type="submit" id="add-video-btn" class="btn-primary px-6 py-3 rounded-xl font-bold flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+        إضافة الفيديو
+       </button>
+      </form>
+     </div>
+     
+     <!-- Videos List -->
+     <div class="card-gradient rounded-2xl border border-white/10 p-6">
+      <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+       <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+       </svg>
+       الفيديوهات المضافة
+      </h3>
+      <div id="admin-videos-list">
+       <div class="text-center py-8 text-gray-400">
+        <p>لا توجد فيديوهات مضافة</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </main>
+   
+   <!-- Footer -->
+   <footer class="border-t border-white/10 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 py-6 text-center text-gray-400">
+     <p>© 2024 Infinity - جميع الحقوق محفوظة</p>
+    </div>
+   </footer>
+  </div>
+  
+  <script>
+    // Configuration
+    const ADMIN_USERNAME = 'admin';
+    const ADMIN_PASSWORD = 'infinity2024';
+    
+    let isAdminLoggedIn = false;
+    let videosData = [];
+    let currentFilter = 'all';
+    let selectedVideoId = null;
+    let selectedFile = null;
+    let currentVideoSource = 'url';
+
+    // Default configuration
+    const defaultConfig = {
+      site_title: 'Infinity',
+      welcome_text: 'مرحباً بك في منصة Infinity التعليمية',
+      background_color: '#0f0c29',
+      primary_color: '#a855f7',
+      text_color: '#ffffff',
+      card_color: 'rgba(255,255,255,0.1)',
+      accent_color: '#6366f1'
+    };
+
+    let config = { ...defaultConfig };
+
+    // Toast notification
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast px-4 py-3 rounded-lg flex items-center gap-2 ${
+        type === 'success' ? 'bg-green-500/90' : 
+        type === 'error' ? 'bg-red-500/90' : 'bg-blue-500/90'
+      }`;
+      toast.innerHTML = `
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          ${type === 'success' ? 
+            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>' :
+            type === 'error' ?
+            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>' :
+            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'
+          }
+        </svg>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Page navigation
+    function showPage(page) {
+      document.getElementById('home-page').classList.add('hidden');
+      document.getElementById('courses-page').classList.add('hidden');
+      document.getElementById('video-page').classList.add('hidden');
+      document.getElementById('admin-dashboard').classList.add('hidden');
+
+      if (page === 'home') {
+        document.getElementById('home-page').classList.remove('hidden');
+      } else if (page === 'courses') {
+        document.getElementById('courses-page').classList.remove('hidden');
+        renderVideosGrid();
+      } else if (page === 'video') {
+        document.getElementById('video-page').classList.remove('hidden');
+      } else if (page === 'admin') {
+        document.getElementById('admin-dashboard').classList.remove('hidden');
+        renderAdminVideosList();
+      }
+    }
+
+    // Admin login
+    function showAdminLogin() {
+      if (isAdminLoggedIn) {
+        showPage('admin');
+        return;
+      }
+      document.getElementById('admin-login-modal').classList.remove('hidden');
+      document.getElementById('admin-username').focus();
+    }
+
+    function closeAdminLogin() {
+      document.getElementById('admin-login-modal').classList.add('hidden');
+      document.getElementById('admin-login-form').reset();
+      document.getElementById('admin-login-error').classList.add('hidden');
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('admin-username').value;
+      const password = document.getElementById('admin-password').value;
+      const errorEl = document.getElementById('admin-login-error');
+
+      if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        isAdminLoggedIn = true;
+        closeAdminLogin();
+        showPage('admin');
+        showToast('تم تسجيل الدخول بنجاح');
+      } else {
+        errorEl.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
+        errorEl.classList.remove('hidden');
+      }
+    }
+
+    function logoutAdmin() {
+      isAdminLoggedIn = false;
+      showPage('home');
+      showToast('تم تسجيل الخروج');
+    }
+
+    // Switch video source
+    function switchVideoSource(source) {
+      currentVideoSource = source;
+      selectedFile = null;
+      
+      const urlBtn = document.getElementById('btn-url-source');
+      const fileBtn = document.getElementById('btn-file-source');
+      const urlSource = document.getElementById('url-source');
+      const fileSource = document.getElementById('file-source');
+      
+      if (source === 'url') {
+        urlBtn.classList.add('bg-purple-500/30', 'border-purple-500/50');
+        urlBtn.classList.remove('bg-white/5', 'border-white/10');
+        fileBtn.classList.remove('bg-purple-500/30', 'border-purple-500/50');
+        fileBtn.classList.add('bg-white/5', 'border-white/10');
+        
+        urlSource.classList.remove('hidden');
+        fileSource.classList.add('hidden');
+      } else {
+        fileBtn.classList.add('bg-purple-500/30', 'border-purple-500/50');
+        fileBtn.classList.remove('bg-white/5', 'border-white/10');
+        urlBtn.classList.remove('bg-purple-500/30', 'border-purple-500/50');
+        urlBtn.classList.add('bg-white/5', 'border-white/10');
+        
+        fileSource.classList.remove('hidden');
+        urlSource.classList.add('hidden');
+      }
+    }
+
+    // Handle file select
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const maxSize = 100 * 1024 * 1024; // 100 MB
+      
+      if (!file.type.startsWith('video/')) {
+        showToast('الرجاء اختيار ملف فيديو صحيح', 'error');
+        selectedFile = null;
+        document.getElementById('file-info').textContent = '';
+        return;
+      }
+      
+      if (file.size > maxSize) {
+        showToast('حجم الملف يجب أن يكون أقل من 100 MB', 'error');
+        selectedFile = null;
+        document.getElementById('file-info').textContent = '';
+        return;
+      }
+      
+      selectedFile = file;
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+      document.getElementById('file-info').textContent = `✓ ${file.name} (${sizeMB} MB)`;
+      showToast('تم اختيار الملف بنجاح');
+    }
+
+    // Add video - FIXED VERSION
+    async function handleAddVideo(e) {
+      e.preventDefault();
+      
+      if (videosData.length >= 999) {
+        showToast('تم الوصول للحد الأقصى من الفيديوهات (999)', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('add-video-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="animate-spin">⏳</span> جاري الإضافة...';
+
+      try {
+        let videoUrl = '';
+        let fileId = '';
+        
+        if (currentVideoSource === 'file') {
+          if (!selectedFile) {
+            showToast('الرجاء اختيار ملف فيديو', 'error');
+            btn.disabled = false;
+            btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg> إضافة الفيديو`;
+            return;
+          }
+          
+          // إنشاء رابط محلي للفيديو
+          videoUrl = URL.createObjectURL(selectedFile);
+          fileId = 'file_' + Date.now();
+          
+          // حفظ معلومات الملف في localStorage
+          const videoBlobs = JSON.parse(localStorage.getItem('videoBlobs') || '{}');
+          videoBlobs[fileId] = {
+            name: selectedFile.name,
+            type: selectedFile.type,
+            size: selectedFile.size,
+            url: videoUrl,
+            lastModified: selectedFile.lastModified
+          };
+          localStorage.setItem('videoBlobs', JSON.stringify(videoBlobs));
+        } else {
+          videoUrl = document.getElementById('video-url').value.trim();
+          if (!videoUrl) {
+            showToast('الرجاء إدخال رابط الفيديو', 'error');
+            btn.disabled = false;
+            btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg> إضافة الفيديو`;
+            return;
+          }
+          
+          // إذا كان رابط يوتيوب فقط، تأكد من صيغته
+          if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+            const youtubeId = extractYouTubeId(videoUrl);
+            if (!youtubeId) {
+              showToast('رابط YouTube غير صالح', 'error');
+              btn.disabled = false;
+              btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg> إضافة الفيديو`;
+              return;
+            }
+          }
+        }
+
+        // الحصول على كلمة المرور
+        let coursePassword = '';
+        if (currentVideoSource === 'file') {
+          coursePassword = document.getElementById('video-password-file').value.trim();
+        } else {
+          coursePassword = document.getElementById('video-password-url').value.trim();
+        }
+        
+        if (!coursePassword) {
+          showToast('الرجاء إدخال كلمة مرور للكورس', 'error');
+          btn.disabled = false;
+          btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+          </svg> إضافة الفيديو`;
+          return;
+        }
+
+        const videoData = {
+          id: Date.now().toString(),
+          type: 'video',
+          title: document.getElementById('video-title').value.trim(),
+          description: document.getElementById('video-description').value.trim(),
+          video_url: videoUrl,
+          file_id: fileId,
+          course: document.getElementById('video-course').value,
+          course_password: coursePassword,
+          created_at: new Date().toISOString(),
+          source_type: currentVideoSource
+        };
+
+        // إضافة الفيديو إلى القائمة مباشرة
+        videosData.push(videoData);
+        
+        // حفظ في localStorage كنسخة احتياطية
+        localStorage.setItem('videosData', JSON.stringify(videosData));
+        
+        // محاولة الحفظ عبر SDK
+        try {
+          const result = await window.dataSdk.create(videoData);
+          if (result && result.isOk) {
+            console.log('تم الحفظ عبر SDK بنجاح');
+          }
+        } catch (sdkError) {
+          console.log('تم الحفظ محلياً (SDK غير متاح)');
+        }
+        
+        btn.disabled = false;
+        btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+        </svg> إضافة الفيديو`;
+
+        // إعادة تعيين النموذج
+        document.getElementById('add-video-form').reset();
+        selectedFile = null;
+        document.getElementById('file-info').textContent = '';
+        
+        // تحديث العرض
+        renderAdminVideosList();
+        if (!document.getElementById('courses-page').classList.contains('hidden')) {
+          renderVideosGrid();
+        }
+        
+        showToast('تم إضافة الفيديو بنجاح');
+      } catch (error) {
+        console.error('Error adding video:', error);
+        btn.disabled = false;
+        btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+        </svg> إضافة الفيديو`;
+        showToast('حدث خطأ أثناء إضافة الفيديو', 'error');
+      }
+    }
+
+    // Delete video
+    async function deleteVideo(videoId) {
+      const video = videosData.find(v => v.id === videoId);
+      if (!video) return;
+
+      const deleteBtn = document.querySelector(`[data-delete-id="${videoId}"]`);
+      if (deleteBtn.dataset.confirming === 'true') {
+        deleteBtn.disabled = true;
+        deleteBtn.textContent = 'جاري الحذف...';
+        
+        // حذف من القائمة المحلية
+        videosData = videosData.filter(v => v.id !== videoId);
+        localStorage.setItem('videosData', JSON.stringify(videosData));
+        
+        // حذف ملف blob إذا كان موجوداً
+        if (video.file_id) {
+          const videoBlobs = JSON.parse(localStorage.getItem('videoBlobs') || '{}');
+          if (videoBlobs[video.file_id]) {
+            // تحرير رابط blob
+            const blobUrl = videoBlobs[video.file_id].url;
+            if (blobUrl.startsWith('blob:')) {
+              URL.revokeObjectURL(blobUrl);
+            }
+            delete videoBlobs[video.file_id];
+            localStorage.setItem('videoBlobs', JSON.stringify(videoBlobs));
+          }
+        }
+        
+        // محاولة الحذف من SDK
+        try {
+          const result = await window.dataSdk.delete(video);
+          if (result && result.isOk) {
+            console.log('تم الحذف من SDK بنجاح');
+          }
+        } catch (sdkError) {
+          console.log('تم الحذف محلياً فقط');
+        }
+        
+        // تحديث العرض
+        renderAdminVideosList();
+        renderVideosGrid();
+        
+        showToast('تم حذف الفيديو بنجاح');
+      } else {
+        deleteBtn.dataset.confirming = 'true';
+        deleteBtn.textContent = 'تأكيد؟';
+        deleteBtn.classList.add('bg-red-600');
+        
+        setTimeout(() => {
+          if (deleteBtn.dataset.confirming === 'true') {
+            deleteBtn.dataset.confirming = 'false';
+            deleteBtn.classList.remove('bg-red-600');
+            deleteBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>`;
+          }
+        }, 3000);
+      }
+    }
+
+    // Render admin videos list
+    function renderAdminVideosList() {
+      const container = document.getElementById('admin-videos-list');
+      
+      if (videosData.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-gray-400">
+            <p>لا توجد فيديوهات مضافة</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = videosData.map(video => `
+        <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 mb-3" data-admin-video="${video.id}">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-lg ${video.course === 'data-structure' ? 'bg-purple-500/20' : 'bg-indigo-500/20'} flex items-center justify-center">
+              <svg class="w-6 h-6 ${video.course === 'data-structure' ? 'text-purple-400' : 'text-indigo-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-bold">${video.title}</h4>
+              <p class="text-sm text-gray-400">${video.course === 'data-structure' ? 'Data Structure' : 'Logic Design'} • كلمة المرور: ${video.course_password}</p>
+              <p class="text-xs text-gray-500">${video.source_type === 'file' ? '📁 ملف محلي' : '🌐 رابط ويب'}</p>
+            </div>
+          </div>
+          <button onclick="deleteVideo('${video.id}')" data-delete-id="${video.id}" class="p-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-400 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // Filter courses
+    function filterCourses(filter) {
+      currentFilter = filter;
+      
+      document.querySelectorAll('[id^="tab-"]').forEach(tab => {
+        tab.classList.remove('bg-purple-500/20', 'border-purple-500/50');
+        tab.classList.add('bg-white/5', 'border-white/10');
+      });
+      
+      const activeTab = document.getElementById(`tab-${filter}`);
+      activeTab.classList.remove('bg-white/5', 'border-white/10');
+      activeTab.classList.add('bg-purple-500/20', 'border-purple-500/50');
+      
+      renderVideosGrid();
+    }
+
+    // Render videos grid
+    function renderVideosGrid() {
+      const container = document.getElementById('videos-grid');
+      let filteredVideos = videosData;
+      
+      if (currentFilter !== 'all') {
+        filteredVideos = videosData.filter(v => v.course === currentFilter);
+      }
+
+      if (filteredVideos.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-16 col-span-full">
+            <div class="w-20 h-20 mx-auto rounded-full bg-white/5 flex items-center justify-center mb-4">
+              <svg class="w-10 h-10 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <p class="text-gray-400 text-lg">لا توجد فيديوهات حالياً</p>
+            <p class="text-gray-500">سيتم إضافة الفيديوهات قريباً</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filteredVideos.map(video => `
+        <div class="course-card card-gradient rounded-2xl border border-white/10 overflow-hidden cursor-pointer" onclick="requestVideoAccess('${video.id}')">
+          <div class="aspect-video ${video.course === 'data-structure' ? 'bg-gradient-to-br from-purple-900/50 to-indigo-900/50' : 'bg-gradient-to-br from-indigo-900/50 to-blue-900/50'} flex items-center justify-center relative">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center backdrop-blur">
+                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="absolute top-3 right-3 px-3 py-1 rounded-full ${video.course === 'data-structure' ? 'bg-purple-500/80' : 'bg-indigo-500/80'} text-sm font-bold">
+              ${video.course === 'data-structure' ? 'Data Structure' : 'Logic'}
+            </div>
+            <div class="absolute bottom-3 left-3 flex items-center gap-1 px-2 py-1 rounded-lg bg-black/50 text-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              </svg>
+              محمي
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-lg mb-2">${video.title}</h3>
+            <p class="text-gray-400 text-sm line-clamp-2">${video.description || 'لا يوجد وصف'}</p>
+            <div class="flex items-center gap-2 mt-3">
+              <span class="text-xs px-2 py-1 rounded ${video.source_type === 'file' ? 'bg-green-500/20 text-green-400' : 'bg-blue-500/20 text-blue-400'}">
+                ${video.source_type === 'file' ? '📁 ملف محلي' : '🌐 رابط ويب'}
+              </span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Course password
+    function requestVideoAccess(videoId) {
+      selectedVideoId = videoId;
+      const video = videosData.find(v => v.id === videoId);
+      if (!video) return;
+
+      document.getElementById('course-name-display').textContent = video.title;
+      document.getElementById('course-password-modal').classList.remove('hidden');
+      document.getElementById('course-password-input').focus();
+    }
+
+    function closeCoursePassword() {
+      document.getElementById('course-password-modal').classList.add('hidden');
+      document.getElementById('course-password-form').reset();
+      document.getElementById('course-password-error').classList.add('hidden');
+      selectedVideoId = null;
+    }
+
+    function handleCoursePassword(e) {
+      e.preventDefault();
+      const password = document.getElementById('course-password-input').value;
+      const video = videosData.find(v => v.id === selectedVideoId);
+      const errorEl = document.getElementById('course-password-error');
+
+      if (!video) {
+        closeCoursePassword();
+        return;
+      }
+
+      if (password === video.course_password) {
+        closeCoursePassword();
+        playVideo(video);
+      } else {
+        errorEl.textContent = 'كلمة المرور غير صحيحة';
+        errorEl.classList.remove('hidden');
+      }
+    }
+
+    // Extract YouTube ID
+    function extractYouTubeId(url) {
+      try {
+        // Pattern 1: https://www.youtube.com/watch?v=ID
+        let match = url.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+        if (match) return match[1];
+        
+        // Pattern 2: https://youtu.be/ID
+        match = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+        if (match) return match[1];
+        
+        // Pattern 3: https://www.youtube.com/embed/ID
+        match = url.match(/\/embed\/([a-zA-Z0-9_-]{11})/);
+        if (match) return match[1];
+        
+        // Pattern 4: Just the ID
+        match = url.match(/^([a-zA-Z0-9_-]{11})$/);
+        if (match) return match[1];
+      } catch (e) {
+        return null;
+      }
+      return null;
+    }
+
+    // Play video - FIXED VERSION
+    function playVideo(video) {
+      const videoContent = document.getElementById('video-content');
+      let videoEmbed = '';
+      let videoType = 'unknown';
+      
+      // تنظيف رابط YouTube
+      const cleanUrl = video.video_url.trim();
+      
+      // Check if it's a YouTube URL
+      if (cleanUrl.includes('youtube.com') || cleanUrl.includes('youtu.be') || cleanUrl.match(/^[a-zA-Z0-9_-]{11}$/)) {
+        const youtubeId = extractYouTubeId(cleanUrl);
+        
+        if (youtubeId) {
+          videoType = 'youtube';
+          videoEmbed = `
+            <div class="video-container" style="border-radius: 8px; overflow: hidden;">
+              <iframe 
+                src="https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1&autoplay=1" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen
+                loading="lazy"
+                frameborder="0"
+                style="width: 100%; height: 100%;">
+              </iframe>
+            </div>
+          `;
+        } else {
+          videoEmbed = `
+            <div class="text-center p-8 bg-red-500/20 border border-red-500/50 rounded-lg">
+              <svg class="w-16 h-16 mx-auto mb-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <p class="text-red-300 text-lg font-bold mb-2">❌ رابط YouTube غير صالح</p>
+              <p class="text-gray-300">تأكد من صحة الرابط. أمثلة:</p>
+              <div class="mt-2 text-sm text-gray-400 text-right space-y-1">
+                <div>https://www.youtube.com/watch?v=VIDEO_ID</div>
+                <div>https://youtu.be/VIDEO_ID</div>
+                <div>VIDEO_ID (المعرف فقط)</div>
+              </div>
+              <p class="mt-4 text-gray-400">الرابط المدخل: <code class="bg-black/30 p-1 rounded">${cleanUrl}</code></p>
+            </div>
+          `;
+        }
+      } else if (cleanUrl.startsWith('blob:')) {
+        // Local video file using blob URL
+        videoType = 'local';
+        videoEmbed = `
+          <div class="video-container">
+            <video 
+              controls 
+              controlsList="nodownload" 
+              autoplay
+              style="width: 100%; height: 100%; background: #000;">
+              <source src="${cleanUrl}" type="video/mp4">
+              <source src="${cleanUrl}" type="video/webm">
+              متصفحك لا يدعم تشغيل الفيديو
+            </video>
+          </div>
+        `;
+      } else if (cleanUrl.startsWith('http')) {
+        // Direct video URL (HTTP/HTTPS)
+        videoType = 'direct';
+        videoEmbed = `
+          <div class="video-container">
+            <video 
+              controls 
+              autoplay
+              style="width: 100%; height: 100%; background: #000;">
+              <source src="${cleanUrl}" type="video/mp4">
+              <source src="${cleanUrl}" type="video/webm">
+              متصفحك لا يدعم تشغيل الفيديو
+            </video>
+          </div>
+        `;
+      } else {
+        videoEmbed = `
+          <div class="text-center p-8 bg-purple-500/20 border border-purple-500/50 rounded-lg">
+            <svg class="w-16 h-16 mx-auto mb-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <p class="text-yellow-300 text-lg font-bold mb-2">⚠️ نوع الفيديو غير مدعوم</p>
+            <p class="text-gray-300">استخدم أحد الأنواع التالية:</p>
+            <div class="mt-2 text-sm text-gray-400 space-y-1">
+              <div>• رابط YouTube (مباشر أو معرف)</div>
+              <div>• رابط فيديو مباشر (.mp4, .webm)</div>
+              <div>• ملف فيديو من جهازك</div>
+            </div>
+          </div>
+        `;
+      }
+
+      videoContent.innerHTML = `
+        <div class="p-4">
+          <div class="mb-6">
+            ${videoEmbed}
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-3 mb-4 flex-wrap">
+              <span class="px-3 py-1 rounded-full ${video.course === 'data-structure' ? 'bg-purple-500/20 text-purple-400' : 'bg-indigo-500/20 text-indigo-400'} text-sm font-bold">
+                ${video.course === 'data-structure' ? 'Data Structure' : 'Logic Design'}
+              </span>
+              ${videoType === 'youtube' ? 
+                '<span class="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-sm font-bold">🔴 YouTube</span>' : 
+                videoType === 'local' ? 
+                '<span class="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-sm font-bold">📁 ملف محلي</span>' : 
+                videoType === 'direct' ? 
+                '<span class="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold">🌐 رابط مباشر</span>' : ''}
+            </div>
+            <h2 class="text-2xl font-bold mb-4">${video.title}</h2>
+            <p class="text-gray-400 leading-relaxed mb-6 whitespace-pre-line">${video.description || 'لا يوجد وصف'}</p>
+            <div class="mt-5 pt-5 border-t border-white/10">
+              <p class="text-xs text-gray-500">📅 ${new Date(video.created_at).toLocaleDateString('ar-SA', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}</p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      showPage('video');
+      
+      // تشغيل الفيديو تلقائياً إذا كان محلياً
+      if (videoType === 'local' || videoType === 'direct') {
+        setTimeout(() => {
+          const videoElement = videoContent.querySelector('video');
+          if (videoElement) {
+            videoElement.play().catch(e => {
+              console.log('التشغيل التلقائي محظور:', e);
+              // عرض زر تشغيل يدوي
+              videoElement.controls = true;
+            });
+          }
+        }, 500);
+      }
+    }
+
+    // Data handler
+    const dataHandler = {
+      onDataChanged(data) {
+        // دمج البيانات من SDK مع البيانات المحلية
+        const sdkVideos = data.filter(item => item.type === 'video');
+        
+        // تحميل البيانات المحلية
+        const localVideos = JSON.parse(localStorage.getItem('videosData') || '[]');
+        
+        // دمج القائمتين مع تجنب التكرار
+        const videoMap = new Map();
+        
+        // إضافة فيديوهات SDK أولاً
+        sdkVideos.forEach(video => videoMap.set(video.id, video));
+        
+        // إضافة الفيديوهات المحلية (تتجاوز إذا كان هناك تكرار)
+        localVideos.forEach(video => videoMap.set(video.id, video));
+        
+        videosData = Array.from(videoMap.values());
+        
+        // تحديث العرض
+        if (!document.getElementById('courses-page').classList.contains('hidden')) {
+          renderVideosGrid();
+        }
+        if (!document.getElementById('admin-dashboard').classList.contains('hidden')) {
+          renderAdminVideosList();
+        }
+      }
+    };
+
+    // Config change handler
+    async function onConfigChange(newConfig) {
+      config = { ...defaultConfig, ...newConfig };
+      
+      const siteTitle = document.getElementById('site-title');
+      if (siteTitle) {
+        siteTitle.textContent = config.site_title || defaultConfig.site_title;
+      }
+      
+      const welcomeText = document.getElementById('welcome-text');
+      if (welcomeText) {
+        welcomeText.innerHTML = `مرحباً بك في منصة <span class="infinity-logo">${config.site_title || defaultConfig.site_title}</span> التعليمية`;
+      }
+    }
+
+    // Map to capabilities
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => {
+              config.background_color = value;
+              window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => config.primary_color || defaultConfig.primary_color,
+            set: (value) => {
+              config.primary_color = value;
+              window.elementSdk.setConfig({ primary_color: value });
+            }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => {
+              config.text_color = value;
+              window.elementSdk.setConfig({ text_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    // Map to edit panel values
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['site_title', config.site_title || defaultConfig.site_title],
+        ['welcome_text', config.welcome_text || defaultConfig.welcome_text]
+      ]);
+    }
+
+    // Initialize
+    async function init() {
+      // تحميل البيانات المحلية أولاً
+      const localData = localStorage.getItem('videosData');
+      if (localData) {
+        try {
+          videosData = JSON.parse(localData);
+        } catch (e) {
+          videosData = [];
+          localStorage.removeItem('videosData');
+        }
+      }
+      
+      // جلب بيانات blob المحفوظة
+      try {
+        const videoBlobs = JSON.parse(localStorage.getItem('videoBlobs') || '{}');
+        // تحميل blob URLs
+        Object.keys(videoBlobs).forEach(fileId => {
+          const video = videosData.find(v => v.file_id === fileId);
+          if (video && videoBlobs[fileId].url) {
+            video.video_url = videoBlobs[fileId].url;
+          }
+        });
+      } catch (e) {
+        console.log('لا توجد بيانات blob محفوظة');
+      }
+
+      await window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+
+      // تهيئة SDK البيانات
+      try {
+        if (window.dataSdk && window.dataSdk.init) {
+          const result = await window.dataSdk.init(dataHandler);
+          if (!result.isOk) {
+            console.warn('Data SDK initialization had issues, continuing with local data');
+          }
+        }
+      } catch (error) {
+        console.warn('Data SDK not available, using local storage only');
+      }
+      
+      // عرض الصفحة الرئيسية
+      showPage('home');
+    }
+
+    // بدء التشغيل
+    init();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c58851af7345ccc',t:'MTc2OTY4NzUxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+ </body>
+</html>
